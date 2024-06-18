@@ -112,4 +112,4 @@ dmypy.json
 # Pyright type checker
 .pyright/
 
-Pipfile
+.Pipfile
