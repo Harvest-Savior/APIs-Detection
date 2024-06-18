@@ -25,6 +25,14 @@
         "documentation": {}
     },
     {
+        "label": "select",
+        "importPath": "sqlalchemy",
+        "description": "sqlalchemy",
+        "isExtraImport": true,
+        "detail": "sqlalchemy",
+        "documentation": {}
+    },
+    {
         "label": "os",
         "kind": 6,
         "isExtraImport": true,
@@ -125,6 +133,14 @@
         "documentation": {}
     },
     {
+        "label": "Depends",
+        "importPath": "fastapi",
+        "description": "fastapi",
+        "isExtraImport": true,
+        "detail": "fastapi",
+        "documentation": {}
+    },
+    {
         "label": "create_connection_pool",
         "importPath": "connect",
         "description": "connect",
@@ -138,6 +154,70 @@
         "description": "fastapi.responses",
         "isExtraImport": true,
         "detail": "fastapi.responses",
+        "documentation": {}
+    },
+    {
+        "label": "OAuth2PasswordBearer",
+        "importPath": "fastapi.security",
+        "description": "fastapi.security",
+        "isExtraImport": true,
+        "detail": "fastapi.security",
+        "documentation": {}
+    },
+    {
+        "label": "OAuth2PasswordRequestForm",
+        "importPath": "fastapi.security",
+        "description": "fastapi.security",
+        "isExtraImport": true,
+        "detail": "fastapi.security",
+        "documentation": {}
+    },
+    {
+        "label": "JWTError",
+        "importPath": "jose",
+        "description": "jose",
+        "isExtraImport": true,
+        "detail": "jose",
+        "documentation": {}
+    },
+    {
+        "label": "jwt",
+        "importPath": "jose",
+        "description": "jose",
+        "isExtraImport": true,
+        "detail": "jose",
+        "documentation": {}
+    },
+    {
+        "label": "CryptContext",
+        "importPath": "passlib.context",
+        "description": "passlib.context",
+        "isExtraImport": true,
+        "detail": "passlib.context",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "timedelta",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "BaseModel",
+        "importPath": "pydantic",
+        "description": "pydantic",
+        "isExtraImport": true,
+        "detail": "pydantic",
         "documentation": {}
     },
     {
@@ -177,6 +257,78 @@
         "documentation": {}
     },
     {
+        "label": "Token",
+        "kind": 6,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "class Token(BaseModel):\n    access_token: str\n    token_type: str\nclass TokenData(BaseModel):\n    username: str | None = None\nclass User(BaseModel):\n    username: str\nclass UserInDB(User):\n    hashed_password: str\n# Helper functions",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "TokenData",
+        "kind": 6,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "class TokenData(BaseModel):\n    username: str | None = None\nclass User(BaseModel):\n    username: str\nclass UserInDB(User):\n    hashed_password: str\n# Helper functions\ndef verify_password(plain_password, hashed_password):\n    return pwd_context.verify(plain_password, hashed_password)\ndef get_password_hash(password):",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "User",
+        "kind": 6,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "class User(BaseModel):\n    username: str\nclass UserInDB(User):\n    hashed_password: str\n# Helper functions\ndef verify_password(plain_password, hashed_password):\n    return pwd_context.verify(plain_password, hashed_password)\ndef get_password_hash(password):\n    return pwd_context.hash(password)\ndef create_access_token(data: dict, expires_delta: timedelta | None = None):",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "UserInDB",
+        "kind": 6,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "class UserInDB(User):\n    hashed_password: str\n# Helper functions\ndef verify_password(plain_password, hashed_password):\n    return pwd_context.verify(plain_password, hashed_password)\ndef get_password_hash(password):\n    return pwd_context.hash(password)\ndef create_access_token(data: dict, expires_delta: timedelta | None = None):\n    to_encode = data.copy()\n    if expires_delta:",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "verify_password",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def verify_password(plain_password, hashed_password):\n    return pwd_context.verify(plain_password, hashed_password)\ndef get_password_hash(password):\n    return pwd_context.hash(password)\ndef create_access_token(data: dict, expires_delta: timedelta | None = None):\n    to_encode = data.copy()\n    if expires_delta:\n        expire = datetime.utcnow() + expires_delta\n    else:\n        expire = datetime.utcnow() + timedelta(minutes=15)",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "get_password_hash",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def get_password_hash(password):\n    return pwd_context.hash(password)\ndef create_access_token(data: dict, expires_delta: timedelta | None = None):\n    to_encode = data.copy()\n    if expires_delta:\n        expire = datetime.utcnow() + expires_delta\n    else:\n        expire = datetime.utcnow() + timedelta(minutes=15)\n    to_encode.update({\"exp\": expire})\n    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "create_access_token",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def create_access_token(data: dict, expires_delta: timedelta | None = None):\n    to_encode = data.copy()\n    if expires_delta:\n        expire = datetime.utcnow() + expires_delta\n    else:\n        expire = datetime.utcnow() + timedelta(minutes=15)\n    to_encode.update({\"exp\": expire})\n    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)\n    return encoded_jwt\ndef get_user(username: str):",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "get_user",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def get_user(username: str):\n    with pool.connect() as conn:\n        result = conn.execute(text(\"SELECT email, password FROM farmerusers WHERE email = :email\"), {\"email\": username}).first()\n        if result:\n            return UserInDB(username=result[0], hashed_password=result[1])\n    return None\nasync def get_current_user(token: str = Depends(oauth2_scheme)):\n    credentials_exception = HTTPException(\n        status_code=status.HTTP_401_UNAUTHORIZED,\n        detail=\"Could not validate credentials\",",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
         "label": "process_image",
         "kind": 2,
         "importPath": "main",
@@ -199,7 +351,7 @@
         "kind": 2,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "def index():\n    return Response(content=\"API WORKING\", status_code=200)\n# Endpoint for image prediction\n@app.post(\"/predict_image\")\nasync def predict_image(photo: UploadFile = File(...)):\n    try:\n        logger.info(\"Received image for prediction.\")\n        if photo.content_type not in [\"image/jpeg\", \"image/png\"]:\n            logger.error(\"File is not an image.\")\n            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=\"File is Not an Image\")",
+        "peekOfCode": "def index():\n    return Response(content=\"API WORKING\", status_code=200)\n# Token endpoint for user login\n@app.post(\"/token\", response_model=Token)\nasync def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):\n    user = get_user(form_data.username)\n    if not user or not verify_password(form_data.password, user.hashed_password):\n        raise HTTPException(\n            status_code=status.HTTP_401_UNAUTHORIZED,\n            detail=\"Incorrect username or password\",",
         "detail": "main",
         "documentation": {}
     },
@@ -208,7 +360,7 @@
         "kind": 2,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "def get_history():\n    logger.info(\"Fetching prediction history.\")\n    return JSONResponse(content={\"history\": prediction_history}, status_code=200)\n# Endpoint to get disease information by plant name\n@app.get(\"/disease_info/{plant_name}\")\ndef get_disease_info(plant_name: str):\n    try:\n        logger.info(f\"Fetching disease info for plant: {plant_name}\")\n        disease_info = fetch_disease_info_by_disease_name(plant_name)\n        if not disease_info:",
+        "peekOfCode": "def get_history(current_user: User = Depends(get_current_user)):\n    logger.info(\"Fetching prediction history.\")\n    return JSONResponse(content={\"history\": prediction_history}, status_code=200)\n# Endpoint to get disease information by plant name\n@app.get(\"/disease_info/{plant_name}\")\ndef get_disease_info(plant_name: str, current_user: User = Depends(get_current_user)):\n    try:\n        logger.info(f\"Fetching disease info for plant: {plant_name}\")\n        disease_info = fetch_disease_info_by_disease_name(plant_name)\n        if not disease_info:",
         "detail": "main",
         "documentation": {}
     },
@@ -217,7 +369,7 @@
         "kind": 2,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "def get_disease_info(plant_name: str):\n    try:\n        logger.info(f\"Fetching disease info for plant: {plant_name}\")\n        disease_info = fetch_disease_info_by_disease_name(plant_name)\n        if not disease_info:\n            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=\"Plant or disease info not found\")\n        return JSONResponse(content=disease_info, status_code=200)\n    except HTTPException as http_err:\n        logger.error(f\"HTTP exception: {http_err.detail}\")\n        raise http_err",
+        "peekOfCode": "def get_disease_info(plant_name: str, current_user: User = Depends(get_current_user)):\n    try:\n        logger.info(f\"Fetching disease info for plant: {plant_name}\")\n        disease_info = fetch_disease_info_by_disease_name(plant_name)\n        if not disease_info:\n            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=\"Plant or disease info not found\")\n        return JSONResponse(content=disease_info, status_code=200)\n    except HTTPException as http_err:\n        logger.error(f\"HTTP exception: {http_err.detail}\")\n        raise http_err",
         "detail": "main",
         "documentation": {}
     },
@@ -271,7 +423,52 @@
         "kind": 5,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "prediction_history = []\n# Image processing function\ndef process_image(image_bytes):\n    try:\n        image = Image.open(BytesIO(image_bytes))\n        if image.mode != 'RGB':\n            image = image.convert('RGB')\n        image = image.resize((150, 150))\n        image = np.array(image) / 255.0\n        return image",
+        "peekOfCode": "prediction_history = []\n# Security settings\nSECRET_KEY = \"your_secret_key\"  # Change this to a random secret key\nALGORITHM = \"HS256\"\nACCESS_TOKEN_EXPIRE_MINUTES = 30\npwd_context = CryptContext(schemes=[\"bcrypt\"], deprecated=\"auto\")\noauth2_scheme = OAuth2PasswordBearer(tokenUrl=\"token\")\n# Pydantic models\nclass Token(BaseModel):\n    access_token: str",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "SECRET_KEY",
+        "kind": 5,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "SECRET_KEY = \"your_secret_key\"  # Change this to a random secret key\nALGORITHM = \"HS256\"\nACCESS_TOKEN_EXPIRE_MINUTES = 30\npwd_context = CryptContext(schemes=[\"bcrypt\"], deprecated=\"auto\")\noauth2_scheme = OAuth2PasswordBearer(tokenUrl=\"token\")\n# Pydantic models\nclass Token(BaseModel):\n    access_token: str\n    token_type: str\nclass TokenData(BaseModel):",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "ALGORITHM",
+        "kind": 5,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "ALGORITHM = \"HS256\"\nACCESS_TOKEN_EXPIRE_MINUTES = 30\npwd_context = CryptContext(schemes=[\"bcrypt\"], deprecated=\"auto\")\noauth2_scheme = OAuth2PasswordBearer(tokenUrl=\"token\")\n# Pydantic models\nclass Token(BaseModel):\n    access_token: str\n    token_type: str\nclass TokenData(BaseModel):\n    username: str | None = None",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "ACCESS_TOKEN_EXPIRE_MINUTES",
+        "kind": 5,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "ACCESS_TOKEN_EXPIRE_MINUTES = 30\npwd_context = CryptContext(schemes=[\"bcrypt\"], deprecated=\"auto\")\noauth2_scheme = OAuth2PasswordBearer(tokenUrl=\"token\")\n# Pydantic models\nclass Token(BaseModel):\n    access_token: str\n    token_type: str\nclass TokenData(BaseModel):\n    username: str | None = None\nclass User(BaseModel):",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "pwd_context",
+        "kind": 5,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "pwd_context = CryptContext(schemes=[\"bcrypt\"], deprecated=\"auto\")\noauth2_scheme = OAuth2PasswordBearer(tokenUrl=\"token\")\n# Pydantic models\nclass Token(BaseModel):\n    access_token: str\n    token_type: str\nclass TokenData(BaseModel):\n    username: str | None = None\nclass User(BaseModel):\n    username: str",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "oauth2_scheme",
+        "kind": 5,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "oauth2_scheme = OAuth2PasswordBearer(tokenUrl=\"token\")\n# Pydantic models\nclass Token(BaseModel):\n    access_token: str\n    token_type: str\nclass TokenData(BaseModel):\n    username: str | None = None\nclass User(BaseModel):\n    username: str\nclass UserInDB(User):",
         "detail": "main",
         "documentation": {}
     }
