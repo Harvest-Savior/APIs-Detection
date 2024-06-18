@@ -1,0 +1,23 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+uvicorn = "*"
+tensorflow = "*"
+numpy = "*"
+firebase-admin = "*"
+pillow = "*"
+fastapi = "*"
+google-cloud-firestore = "*"
+google-cloud-secret-manager = "*"
+sqlalchemy = "*"
+google-auth = "*"
+cloud-sql-python-connector = {extras = ["pymysql"], version = "*"}
+pymysql = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.11"
