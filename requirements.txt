@@ -10,3 +10,6 @@ sqlalchemy
 google-auth
 cloud-sql-python-connector[pymysql]
 pymysql
+mysql-connector-python
+passlib
+python-jose

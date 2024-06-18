@@ -200,6 +200,7 @@ async def predict_image(photo: UploadFile = File(...), current_user: User = Depe
             response = {
             'status' : 'success',
             'message' : 'Berhasil memprediksi gambar',
+            'prediction' : predicition,
             'result':  disease_info
            
         }
