@@ -184,30 +184,51 @@ async def predict_image(photo: UploadFile = File(...), current_user: User = Depe
         prediction = model.predict(processed_image)
         predicted_class = np.argmax(prediction)
         predicted_class_name = class_names[predicted_class]
-        
+
         disease_info = fetch_disease_info_by_disease_name(predicted_class_name)
-        
+
         if predicted_class_name in ['Cabai Sehat', 'Tomat Sehat']:
-            predicition = "Tanaman kamu sehat"
+            prediction_message = "Tanaman kamu sehat"
             response = {
-            'status' : 'success',
-            'message' : 'Berhasil memprediksi gambar',
-            'result' : predicition
-           
-        }
+                'status': 'success',
+                'message': 'Berhasil memprediksi gambar',
+                'result': prediction_message
+            }
         else:
-            predicition = "Tanaman kamu terjangkit penyakit"
+            prediction_message = "Tanaman kamu terjangkit penyakit"
             response = {
-            'status' : 'success',
-            'message' : 'Berhasil memprediksi gambar',
-            'prediction' : predicition,
-            'result':  disease_info
-           
-        }
-            
+                'status': 'success',
+                'message': 'Berhasil memprediksi gambar',
+                'prediction': prediction_message,
+                'result': disease_info
+            }
+
         # Save prediction to history
         prediction_history.append(response)
         logger.info(f"Prediction: {response}")
+
+        # Insert prediction into the database
+        try:
+            with pool.connect() as conn:
+                logger.info("Inserting prediction into the database...")
+                trans = conn.begin()
+                try:
+                    conn.execute(
+                        text(
+                            "INSERT INTO predictions (user_id, prediction, predicted_class_name) "
+                            "VALUES (:user_id, :prediction, :predicted_class_name)"
+                        ),
+                        {"user_id": current_user.username, "prediction": prediction_message, "predicted_class_name": predicted_class_name}
+                    )
+                    trans.commit()
+                    logger.info("Prediction inserted and transaction committed successfully.")
+                except:
+                    trans.rollback()
+                    logger.error("Failed to commit transaction.")
+                    raise
+        except Exception as e:
+            logger.error(f"Failed to insert prediction into the database: {e}")
+            raise HTTPException(status_code=500, detail="Failed to save prediction to database")
 
         return JSONResponse(content=response, status_code=200)
 
@@ -217,6 +238,7 @@ async def predict_image(photo: UploadFile = File(...), current_user: User = Depe
     except Exception as e:
         logger.error(f"Internal server error: {e}")
         raise HTTPException(status_code=500, detail="Internal Server Error")
+
 
 # Endpoint to get prediction history
 @app.get("/gethistory")
@@ -239,6 +261,34 @@ def get_disease_info(plant_name: str, current_user: User = Depends(get_current_u
     except Exception as e:
         logger.error(f"Internal server error: {e}")
         raise HTTPException(status_code=500, detail="Internal Server Error")
+
+# Endpoint to get user predictions
+@app.get("/user_predictions")
+def get_user_predictions(current_user: User = Depends(get_current_user)):
+    try:
+        logger.info(f"Fetching predictions for user: {current_user.username}")
+        with pool.connect() as conn:
+            result = conn.execute(
+                text("SELECT user_id, prediction, predicted_class_name, timestamp FROM predictions WHERE user_id = :user_id"),
+                {"user_id": current_user.username}
+            ).fetchall()
+            
+            # Format the result into a list of dictionaries
+            predictions = []
+            for row in result:
+                prediction_dict = {
+                    "user_id": row[0],
+                    "prediction": row[1],
+                    "predicted_class_name": row[2],
+                    "timestamp": row[3].isoformat()  # Assuming created_at is a datetime column
+                }
+                predictions.append(prediction_dict)
+
+        return JSONResponse(content={"predictions": predictions}, status_code=200)
+    except Exception as e:
+        logger.error(f"Failed to fetch user predictions: {e}")
+        raise HTTPException(status_code=500, detail="Failed to fetch user predictions")
+
 
 if __name__ == "__main__":
     logger.info("Starting server...")
