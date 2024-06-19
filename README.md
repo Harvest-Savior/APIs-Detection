@@ -23,7 +23,7 @@ jan lupa isi ini los
     "token_type": "bearer"
   }
 ### Image Prediction
-- **Endpoint:** `//predict_image`
+- **Endpoint:** `/predict_image`
 - **Method:** `POST`
 - **Headers:**
     - `Authorization`: `Bearer <token>` : use a token from login
