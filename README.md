@@ -5,13 +5,12 @@ This API handles user input in the form of images of chili and tomato plant dise
 # Access Our Deployed API
 jan lupa isi ini los
 
-# Endpoint Description
+# Endpoint Description\
+###  Login for Access Token
 #### Request:
 
 - **Endpoint:** `/token`
 - **Method:** `POST`
-- **Headers:**
-    - `Content-Type`: `multipart/form-data`
 - **Request Body (Form-data):**
   ```plaintext
   username: usernameExample
@@ -23,3 +22,26 @@ jan lupa isi ini los
     "access_token": "token",
     "token_type": "bearer"
   }
+### Image Prediction
+- **Endpoint:** `//predict_image`
+- **Method:** `POST`
+- **Headers:**
+    - `Authorization`: `Bearer <token>` : use a token from login
+- **Request Body (Form-data):**
+      `photo`: Image file (JPEG or PNG)
+#### Response
+- **Success (200): OK**
+  ``` json
+  {
+    "status": "success",
+    "message": "Berhasil memprediksi gambar",
+    "image": "url image",
+    "prediction": "Tanaman kamu terjangkit penyakit",
+    "result": {
+        "plant_name": "Tomato",
+        "disease": "disease",
+        "solution": "solustion",
+        "prevention_method": "method"
+    },
+    "medication_recommendations": [medicine]
+}
