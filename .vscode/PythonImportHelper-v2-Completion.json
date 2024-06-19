@@ -247,6 +247,14 @@
         "documentation": {}
     },
     {
+        "label": "storage",
+        "importPath": "google.cloud",
+        "description": "google.cloud",
+        "isExtraImport": true,
+        "detail": "google.cloud",
+        "documentation": {}
+    },
+    {
         "label": "getconn",
         "kind": 2,
         "importPath": "connect",
@@ -404,7 +412,7 @@
         "kind": 2,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "def get_user_predictions(current_user: User = Depends(get_current_user)):\n    try:\n        logger.info(f\"Fetching predictions for user: {current_user.username}\")\n        with pool.connect() as conn:\n            result = conn.execute(\n                text(\"SELECT user_id, prediction, result, medicines, timestamp FROM predictions WHERE user_id = :user_id\"),\n                {\"user_id\": current_user.username}\n            ).fetchall()\n            # Format the result into a list of dictionaries\n            predictions = []",
+        "peekOfCode": "def get_user_predictions(current_user: User = Depends(get_current_user)):\n    try:\n        logger.info(f\"Fetching predictions for user: {current_user.username}\")\n        with pool.connect() as conn:\n            result = conn.execute(\n                text(\"SELECT user_id, image, prediction, result, medicines, timestamp FROM predictions WHERE user_id = :user_id\"),\n                {\"user_id\": current_user.username}\n            ).fetchall()\n            # Format the result into a list of dictionaries\n            predictions = []",
         "detail": "main",
         "documentation": {}
     },
@@ -504,6 +512,24 @@
         "importPath": "main",
         "description": "main",
         "peekOfCode": "oauth2_scheme = OAuth2PasswordBearer(tokenUrl=\"token\")\n# Pydantic models\nclass Token(BaseModel):\n    access_token: str\n    token_type: str\nclass TokenData(BaseModel):\n    username: str | None = None\nclass User(BaseModel):\n    username: str\nclass UserInDB(User):",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "storage_client",
+        "kind": 5,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "storage_client = storage.Client()\n# Google Cloud Storage bucket details\nbucket_name = 'hs-ml-detection'\n# Health check endpoint\n@app.get(\"/\")\ndef index():\n    return Response(content=\"API WORKING\", status_code=200)\n# Token endpoint for user login\n@app.post(\"/token\", response_model=Token)\nasync def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "bucket_name",
+        "kind": 5,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "bucket_name = 'hs-ml-detection'\n# Health check endpoint\n@app.get(\"/\")\ndef index():\n    return Response(content=\"API WORKING\", status_code=200)\n# Token endpoint for user login\n@app.post(\"/token\", response_model=Token)\nasync def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):\n    user = get_user(form_data.username)\n    if not user or not verify_password(form_data.password, user.hashed_password):",
         "detail": "main",
         "documentation": {}
     }

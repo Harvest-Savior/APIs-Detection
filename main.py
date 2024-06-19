@@ -16,6 +16,8 @@ from passlib.context import CryptContext
 from datetime import datetime, timedelta
 from pydantic import BaseModel
 import logging
+from google.cloud import storage
+
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -194,6 +196,11 @@ def fetch_medication_recommendations(disease_name):
 
     return recommendations
 
+# Initialize Google Cloud Storage client
+storage_client = storage.Client()
+
+# Google Cloud Storage bucket details
+bucket_name = 'hs-ml-detection'
 
 # Health check endpoint
 @app.get("/")
@@ -235,12 +242,22 @@ async def predict_image(photo: UploadFile = File(...), current_user: User = Depe
 
         disease_info = fetch_disease_info_by_disease_name(predicted_class_name)
         medication_recommendations = fetch_medication_recommendations(predicted_class_name)
+        
+        # Upload image to Google Cloud Storage
+        bucket = storage_client.bucket(bucket_name)
+        blob = bucket.blob(f"predictions/{current_user.username}/{photo.filename}")
+        blob.upload_from_string(contents, content_type=photo.content_type)
 
+        # Get public URL of the uploaded image
+        photo_url = blob.public_url
+        logger.info(f"Uploaded image URL: {photo_url}")
+        
         if predicted_class_name in ['Cabai Sehat', 'Tomat Sehat']:
             prediction_message = "Tanaman kamu sehat"
             response = {
                 'status': 'success',
                 'message': 'Berhasil memprediksi gambar',
+                'image' : photo_url,
                 'result': prediction_message
             }
             result_data = None
@@ -249,10 +266,13 @@ async def predict_image(photo: UploadFile = File(...), current_user: User = Depe
             response = {
                 'status': 'success',
                 'message': 'Berhasil memprediksi gambar',
+                'image' : photo_url,
                 'prediction': prediction_message,
                 'result': disease_info,
                 'medication_recommendations': medication_recommendations
             }
+            
+            
             # Convert disease_info to JSON string
             try:
                 result_data = json.dumps(disease_info)
@@ -274,18 +294,18 @@ async def predict_image(photo: UploadFile = File(...), current_user: User = Depe
                     if result_data is not None:
                         conn.execute(
                             text(
-                                "INSERT INTO predictions (user_id, prediction, result, medicines) "
-                                "VALUES (:user_id, :prediction, :result, :medicines)"
+                                "INSERT INTO predictions (user_id, image, prediction, result, medicines) "
+                                "VALUES (:user_id, :image, :prediction, :result, :medicines)"
                             ),
-                            {"user_id": current_user.username, "prediction": prediction_message, "result": result_data, "medicines" : json.dumps(medication_recommendations)}
+                            {"user_id": current_user.username, "image": photo_url, "prediction": prediction_message, "result": result_data, "medicines" : json.dumps(medication_recommendations)}
                         )
                     else:
                         conn.execute(
                             text(
-                                "INSERT INTO predictions (user_id, prediction) "
-                                "VALUES (:user_id, :prediction)"
+                                "INSERT INTO predictions (user_id, image, prediction) "
+                                "VALUES (:user_id, :image, :prediction)"
                             ),
-                            {"user_id": current_user.username, "prediction": prediction_message}
+                            {"user_id": current_user.username, "image": photo_url, "prediction": prediction_message}
                         )
                     trans.commit()
                     logger.info("Prediction inserted and transaction committed successfully.")
@@ -336,7 +356,7 @@ def get_user_predictions(current_user: User = Depends(get_current_user)):
         logger.info(f"Fetching predictions for user: {current_user.username}")
         with pool.connect() as conn:
             result = conn.execute(
-                text("SELECT user_id, prediction, result, medicines, timestamp FROM predictions WHERE user_id = :user_id"),
+                text("SELECT user_id, image, prediction, result, medicines, timestamp FROM predictions WHERE user_id = :user_id"),
                 {"user_id": current_user.username}
             ).fetchall()
             
@@ -345,10 +365,11 @@ def get_user_predictions(current_user: User = Depends(get_current_user)):
             for row in result:
                 prediction_dict = {
                     "user_id": row[0],
-                    "prediction": row[1],
-                    "result": row[2],
-                    "medicines": row[3],
-                    "timestamp": row[4].isoformat()
+                    "image" : row[1],
+                    "prediction": row[2],
+                    "result": row[3],
+                    "medicines": row[4],
+                    "timestamp": row[5].isoformat()
                 }
                 predictions.append(prediction_dict)
 
