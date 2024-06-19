@@ -156,7 +156,8 @@ def fetch_medication_recommendations(disease_name):
         sql_statement = text(
             """
             SELECT 
-                m.url, 
+                m.url,
+                m.linkProduct,
                 m.namaObat, 
                 m.deskripsi, 
                 m.stok, 
@@ -179,17 +180,18 @@ def fetch_medication_recommendations(disease_name):
 
     recommendations = [
         {
-            "url2": row[0], 
-            "namaObat": row[1], 
-            "deskripsi": row[2], 
-            "stok": row[3], 
-            "harga": float(row[4]) if isinstance(row[4], Decimal) else row[4],
+            "gambar": row[0],
+            "linkProduct" : row[1],
+            "namaObat": row[2], 
+            "deskripsi": row[3], 
+            "stok": row[4], 
+            "harga": float(row[5]) if isinstance(row[4], Decimal) else row[4],
             "Toko": {
-                "id": row[5],
-                "nama Toko": row[6],
-                "alamat": row[7],
-                "email" : row[8],
-                "noHp": row[9]
+                "id": row[6],
+                "nama Toko": row[7],
+                "alamat": row[8],
+                "email" : row[9],
+                "noHp": row[10]
             }
         } for row in result
     ]

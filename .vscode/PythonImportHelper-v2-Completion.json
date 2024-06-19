@@ -376,7 +376,7 @@
         "kind": 2,
         "importPath": "main",
         "description": "main",
-        "peekOfCode": "def fetch_medication_recommendations(disease_name):\n    with pool.connect() as conn:\n        sql_statement = text(\n            \"\"\"\n            SELECT \n                m.url, \n                m.namaObat, \n                m.deskripsi, \n                m.stok, \n                m.harga, ",
+        "peekOfCode": "def fetch_medication_recommendations(disease_name):\n    with pool.connect() as conn:\n        sql_statement = text(\n            \"\"\"\n            SELECT \n                m.url,\n                m.linkProduct,\n                m.namaObat, \n                m.deskripsi, \n                m.stok, ",
         "detail": "main",
         "documentation": {}
     },
