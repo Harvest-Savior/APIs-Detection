@@ -1,3 +1,5 @@
+from decimal import Decimal
+import json
 import os
 import uvicorn
 import tensorflow as tf
@@ -147,6 +149,52 @@ def fetch_disease_info_by_disease_name(disease_name):
 
     return formatted_results
 
+def fetch_medication_recommendations(disease_name):
+    with pool.connect() as conn:
+        sql_statement = text(
+            """
+            SELECT 
+                m.url, 
+                m.namaObat, 
+                m.deskripsi, 
+                m.stok, 
+                m.harga, 
+                m.storeuserId,
+                s.namaToko,
+                s.alamat,
+                s.email,
+                s.noHp
+            FROM medicines m
+            JOIN storeusers s ON m.storeuserId = s.id
+            WHERE m.penyakit = :penyakit
+            """
+        )
+        result = conn.execute(sql_statement, {"penyakit": disease_name}).fetchall()
+
+    # Handle no medication recommendations found
+    if not result:
+        return []
+
+    recommendations = [
+        {
+            "url2": row[0], 
+            "namaObat": row[1], 
+            "deskripsi": row[2], 
+            "stok": row[3], 
+            "harga": float(row[4]) if isinstance(row[4], Decimal) else row[4],
+            "Toko": {
+                "id": row[5],
+                "nama Toko": row[6],
+                "alamat": row[7],
+                "email" : row[8],
+                "noHp": row[9]
+            }
+        } for row in result
+    ]
+
+    return recommendations
+
+
 # Health check endpoint
 @app.get("/")
 def index():
@@ -186,6 +234,7 @@ async def predict_image(photo: UploadFile = File(...), current_user: User = Depe
         predicted_class_name = class_names[predicted_class]
 
         disease_info = fetch_disease_info_by_disease_name(predicted_class_name)
+        medication_recommendations = fetch_medication_recommendations(predicted_class_name)
 
         if predicted_class_name in ['Cabai Sehat', 'Tomat Sehat']:
             prediction_message = "Tanaman kamu sehat"
@@ -194,14 +243,23 @@ async def predict_image(photo: UploadFile = File(...), current_user: User = Depe
                 'message': 'Berhasil memprediksi gambar',
                 'result': prediction_message
             }
+            result_data = None
         else:
             prediction_message = "Tanaman kamu terjangkit penyakit"
             response = {
                 'status': 'success',
                 'message': 'Berhasil memprediksi gambar',
                 'prediction': prediction_message,
-                'result': disease_info
+                'result': disease_info,
+                'medication_recommendations': medication_recommendations
             }
+            # Convert disease_info to JSON string
+            try:
+                result_data = json.dumps(disease_info)
+                logger.info(f"Serialized disease info JSON: {result_data}")
+            except (TypeError, ValueError) as e:
+                logger.error(f"Error serializing disease info to JSON: {e}")
+                raise HTTPException(status_code=500, detail="Failed to serialize disease info to JSON")
 
         # Save prediction to history
         prediction_history.append(response)
@@ -213,13 +271,22 @@ async def predict_image(photo: UploadFile = File(...), current_user: User = Depe
                 logger.info("Inserting prediction into the database...")
                 trans = conn.begin()
                 try:
-                    conn.execute(
-                        text(
-                            "INSERT INTO predictions (user_id, prediction, predicted_class_name) "
-                            "VALUES (:user_id, :prediction, :predicted_class_name)"
-                        ),
-                        {"user_id": current_user.username, "prediction": prediction_message, "predicted_class_name": predicted_class_name}
-                    )
+                    if result_data is not None:
+                        conn.execute(
+                            text(
+                                "INSERT INTO predictions (user_id, prediction, result, medicines) "
+                                "VALUES (:user_id, :prediction, :result, :medicines)"
+                            ),
+                            {"user_id": current_user.username, "prediction": prediction_message, "result": result_data, "medicines" : json.dumps(medication_recommendations)}
+                        )
+                    else:
+                        conn.execute(
+                            text(
+                                "INSERT INTO predictions (user_id, prediction) "
+                                "VALUES (:user_id, :prediction)"
+                            ),
+                            {"user_id": current_user.username, "prediction": prediction_message}
+                        )
                     trans.commit()
                     logger.info("Prediction inserted and transaction committed successfully.")
                 except:
@@ -269,7 +336,7 @@ def get_user_predictions(current_user: User = Depends(get_current_user)):
         logger.info(f"Fetching predictions for user: {current_user.username}")
         with pool.connect() as conn:
             result = conn.execute(
-                text("SELECT user_id, prediction, predicted_class_name, timestamp FROM predictions WHERE user_id = :user_id"),
+                text("SELECT user_id, prediction, result, medicines, timestamp FROM predictions WHERE user_id = :user_id"),
                 {"user_id": current_user.username}
             ).fetchall()
             
@@ -279,8 +346,9 @@ def get_user_predictions(current_user: User = Depends(get_current_user)):
                 prediction_dict = {
                     "user_id": row[0],
                     "prediction": row[1],
-                    "predicted_class_name": row[2],
-                    "timestamp": row[3].isoformat()  # Assuming created_at is a datetime column
+                    "result": row[2],
+                    "medicines": row[3],
+                    "timestamp": row[4].isoformat()
                 }
                 predictions.append(prediction_dict)
 

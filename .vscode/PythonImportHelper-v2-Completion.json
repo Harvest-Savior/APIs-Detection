@@ -33,6 +33,23 @@
         "documentation": {}
     },
     {
+        "label": "Decimal",
+        "importPath": "decimal",
+        "description": "decimal",
+        "isExtraImport": true,
+        "detail": "decimal",
+        "documentation": {}
+    },
+    {
+        "label": "json",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "json",
+        "description": "json",
+        "detail": "json",
+        "documentation": {}
+    },
+    {
         "label": "os",
         "kind": 6,
         "isExtraImport": true,
@@ -347,6 +364,15 @@
         "documentation": {}
     },
     {
+        "label": "fetch_medication_recommendations",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def fetch_medication_recommendations(disease_name):\n    with pool.connect() as conn:\n        sql_statement = text(\n            \"\"\"\n            SELECT \n                m.url, \n                m.namaObat, \n                m.deskripsi, \n                m.stok, \n                m.harga, ",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
         "label": "index",
         "kind": 2,
         "importPath": "main",
@@ -370,6 +396,15 @@
         "importPath": "main",
         "description": "main",
         "peekOfCode": "def get_disease_info(plant_name: str, current_user: User = Depends(get_current_user)):\n    try:\n        logger.info(f\"Fetching disease info for plant: {plant_name}\")\n        disease_info = fetch_disease_info_by_disease_name(plant_name)\n        if not disease_info:\n            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=\"Plant or disease info not found\")\n        return JSONResponse(content=disease_info, status_code=200)\n    except HTTPException as http_err:\n        logger.error(f\"HTTP exception: {http_err.detail}\")\n        raise http_err",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "get_user_predictions",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def get_user_predictions(current_user: User = Depends(get_current_user)):\n    try:\n        logger.info(f\"Fetching predictions for user: {current_user.username}\")\n        with pool.connect() as conn:\n            result = conn.execute(\n                text(\"SELECT user_id, prediction, result, medicines, timestamp FROM predictions WHERE user_id = :user_id\"),\n                {\"user_id\": current_user.username}\n            ).fetchall()\n            # Format the result into a list of dictionaries\n            predictions = []",
         "detail": "main",
         "documentation": {}
     },
