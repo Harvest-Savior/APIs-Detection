@@ -5,7 +5,7 @@ This API handles user input in the form of images of chili and tomato plant dise
 # Access Our Deployed API
 jan lupa isi ini los
 
-# Endpoint Description\
+# Endpoint Description
 ###  Login for Access Token
 #### Request:
 
@@ -43,5 +43,5 @@ jan lupa isi ini los
         "solution": "solustion",
         "prevention_method": "method"
     },
-    "medication_recommendations": [medicine]
+    "medication_recommendations": []
 }
