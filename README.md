@@ -4,11 +4,17 @@ This API handles user input in the form of images of chili and tomato plant dise
 
 # Access Our Deployed API
 jan lupa isi ini los
+# Table Of Content
+1. **[Endpoint Description](#endpoint-description)**
+   1. **[Login for Access Token(POST /token)](#login-for-access-post-token)**
+   2. **[Image Prediction (POST /predict_image)](#image-prediction-post-predictimage)**
+   3. **[Prediction History (GET /user_predictions)](#prediction-history-get-userpredictions)**
+2. **[Deploying the Application to Cloud Run](#deploying-the-application-to-cloud-run)**
+    
 
 # Endpoint Description
-###  Login for Access Token
+###  Login for Access Token (`/token`)
 #### Request:
-
 - **Endpoint:** `/token`
 - **Method:** `POST`
 - **Request Body (Form-data):**
@@ -22,7 +28,7 @@ jan lupa isi ini los
     "access_token": "token",
     "token_type": "bearer"
   }
-### Image Prediction
+### Image Prediction (`/predict_image`)
 - **Endpoint:** `/predict_image`
 - **Method:** `POST`
 - **Headers:**
@@ -44,4 +50,34 @@ jan lupa isi ini los
         "prevention_method": "method"
     },
     "medication_recommendations": []
-}
+  }
+- **Error (500): Internal Server Error**
+   ``` json
+   {
+  "detail": "Internal Server Error"
+  }
+### Prediction History (`/user_predictions`)
+- **Endpoint:** `/user_predictions`
+- **Method:** `GET`
+- **Headers:**
+    - `Authorization`: `Bearer <token>` : use a token from login
+#### Response
+- **Success (200): OK**
+  ``` json
+  {
+  "history": [
+    {
+      "status": "success",
+      "message": "Berhasil memprediksi gambar",
+      "image": "image url",
+      "result": "Tanaman kamu sehat"
+    }
+- **Error (500): Internal Server Error**
+   ``` json
+   {
+  "detail": "Internal Server Error"
+  }
+#Deploying the Application to Cloud Run
+# Developers
+   - [Carlos Daeli](https://github.com/carllosnd)
+   - [Berlian Ndruru](https://github.com/berlianndruru)
