@@ -4,16 +4,6 @@ This API handles user input in the form of images of chili and tomato plant dise
 
 # Access Our Deployed API
 jan lupa isi ini los
-# Table Of Content
-
-1. **[Endpoint Description](#endpoint-description)**
-   - **[Login for Access Token (POST /token)](#login-for-access-token-post-token)**
-   - **[Image Prediction (POST /predict_image)](#image-prediction-post-predict_image)**
-   - **[Prediction History (GET /user_predictions)](#prediction-history-get-user_predictions)**
-2. **[Deploying the Application to Cloud Run](#deploying-the-application-to-cloud-run)**
-
-
-
 # Endpoint Description
 ###  Login for Access Token (`/token`)
 #### Request:
@@ -79,7 +69,7 @@ jan lupa isi ini los
    {
   "detail": "Internal Server Error"
   }
-#Deploying the Application to Cloud Run
+# Deploying the Application to Cloud Run
 # Developers
    - [Carlos Daeli](https://github.com/carllosnd)
    - [Berlian Ndruru](https://github.com/berlianndruru)
