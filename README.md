@@ -6,14 +6,13 @@ This API handles user input in the form of images of chili and tomato plant dise
 jan lupa isi ini los
 # Table Of Content
 1. **[Endpoint Description](#endpoint-description)**
-   1. - **[Login for Access Token (`/token`)](#login-for-access-token-token)**
+   - **[Login for Access Token (`/token`)](#login-for-access-token-token)**
          - **[Request](#request)**
          - **[Response](#response)**
-      
-    - **[Image Prediction (`/predict_image`)](#image-prediction-predict_image)**
+   - **[Image Prediction (`/predict_image`)](#image-prediction-predict_image)**
          - **[Request](#request-1)**
          - **[Response](#response-1)**
-    3. - **[Prediction History (`/user_predictions`)](#prediction-history-user_predictions)**
+   - **[Prediction History (`/user_predictions`)](#prediction-history-user_predictions)**
          - **[Request](#request-2)**
          - **[Response](#response-2)**
 2. **[Deploying the Application to Cloud Run](#deploying-the-application-to-cloud-run)**
