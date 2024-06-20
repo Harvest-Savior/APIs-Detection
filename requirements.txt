@@ -13,3 +13,4 @@ pymysql
 mysql-connector-python
 passlib
 python-jose
+google-cloud-storage
